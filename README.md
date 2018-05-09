@@ -10,4 +10,3 @@
 1. Seed - `knex seed:run --env development`
 1. Sanity check - `npm start`
 1. Don't try: Test (not enable with security issues) - `npm test`
-
