@@ -5,6 +5,8 @@ const BASE_PATH = path.join(__dirname, 'src', 'server', 'db');
 module.exports = {
   test: {
     client: 'pg',
+
+    //mario_test must be changed to DB used
     connection: 'postgres://localhost:5432/mario_test',
     migrations: {
       directory: path.join(BASE_PATH, 'migrations')
@@ -15,6 +17,8 @@ module.exports = {
   },
   development: {
     client: 'pg',
+
+    //mario must be changed to DB used
     connection: 'postgres://localhost:5432/mario',
     migrations: {
       directory: path.join(BASE_PATH, 'migrations')
