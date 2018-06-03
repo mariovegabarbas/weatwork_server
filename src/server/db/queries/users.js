@@ -19,11 +19,18 @@ function addUser(user) {
   .returning('*');
 }
 
-function updatePolarInfo(accesstoken, userid){
-  
+function updatePolarInfo(id, at, ui){
+  return knex('users')
+  .update({
+    accesstoken: at,
+    userid: ui
+  })
+  .where({ id: parseInt(id) })
+  .returning('*');
 }
 
 module.exports = {
   getSingleUser,
   addUser,
+  updatePolarInfo
 };

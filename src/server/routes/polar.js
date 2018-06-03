@@ -17,12 +17,8 @@ var accessToken;
 var userid;
 
 router.get('/auth/polar', async(ctx) => {
-  ctx.redirect(`https://flow.polar.com/oauth2/authorization?response_type=code&client_id=${polar_config.client_id}`);
-});
-
-router.get('/callback/polar', async(ctx) => {
   if (helpers.ensureAuthenticated(ctx)) {
-
+    /** Checking if is logged in **/
     try {
       const user = await queries.getSingleUser(helpers.getIdUser(ctx));
       if (user.length) {
@@ -30,12 +26,39 @@ router.get('/callback/polar', async(ctx) => {
           status: 'success',
           data: user
         };
-        console.log(user.id_user);
+        console.log(user.id);
+        ctx.redirect(`https://flow.polar.com/oauth2/authorization?response_type=code&client_id=${polar_config.client_id}`);
       } else {
         ctx.status = 404;
         ctx.body = {
           status: 'error',
-          message: 'That user has not exist.'
+          message: 'That user does not exist.'
+        };
+      }
+    } catch (err) {
+      console.log(err)
+    }
+  }else{
+    ctx.redirect('/auth/login');
+  }
+});
+
+router.get('/callback/polar', async(ctx) => {
+  if (helpers.ensureAuthenticated(ctx)) {
+
+    /** Checking if is logged in **/
+    try {
+      const user = await queries.getSingleUser(helpers.getIdUser(ctx));
+      if (user.length) {
+        ctx.body = {
+          status: 'success',
+          data: user
+        };
+      } else {
+        ctx.status = 404;
+        ctx.body = {
+          status: 'error',
+          message: 'That user does not exist.'
         };
       }
     } catch (err) {
@@ -43,12 +66,11 @@ router.get('/callback/polar', async(ctx) => {
     }
 
 
-
-    console.log(ctx.request.query.code);
+    /** Taking the Polar initial transaction code **/
     var code = ctx.request.query.code;
-
     general_code = code;
 
+    /** Credentials **/
     var creds = btoa(`${polar_config.client_id}:${polar_config.client_secret}`)
     
     const  dat = {
@@ -60,6 +82,7 @@ router.get('/callback/polar', async(ctx) => {
     var contentLength = dat.length;
     
 
+/** Getting tokens, the user is registry in AccessLink **/
     fetch('https://polarremote.com/v2/oauth2/token', {
       headers: {
         'Content-Length': contentLength,
@@ -84,6 +107,11 @@ router.get('/callback/polar', async(ctx) => {
           userid = json.x_user_id;
         
           polar_config.fetchUserInfo(accessToken, userid);
+          queries.updatePolarInfo(helpers.getIdUser(ctx), accessToken, userid);
+          
+          return true;
+        } else {
+          return false;
         }
         
       })
@@ -140,6 +168,7 @@ router.get('/callback/polar', async(ctx) => {
         });
       }
     });*/
+
   }else{
     ctx.redirect('/auth/login');
   }
