@@ -7,7 +7,7 @@ module.exports = {
     client: 'pg',
 
     //mario_test must be changed to DB used
-    connection: 'postgres://localhost:5432/mario_test',
+    connection: 'postgres://localhost:5432/wework_server_test',
     migrations: {
       directory: path.join(BASE_PATH, 'migrations')
     },
@@ -19,7 +19,7 @@ module.exports = {
     client: 'pg',
 
     //mario must be changed to DB used
-    connection: 'postgres://localhost:5432/mario',
+    connection: 'postgres://localhost:5432/wework_server',
     migrations: {
       directory: path.join(BASE_PATH, 'migrations')
     },
