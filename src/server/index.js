@@ -6,13 +6,11 @@ const passport = require('koa-passport');
 const indexRoutes = require('./routes/index');
 const measRoutes = require('./routes/measurements');
 const authRoutes = require('./routes/auth');
+const polarRoutes = require('./routes/polar');
 const store = require('./session');
 
 const app = new Koa();
 const PORT = process.env.PORT || 1337;
-
-const PolarSDK = require('polar-sdk');
-sdk = new PolarSDK('vega.barbas@gmail.com', 'mario1484');
 
 // sessions
 app.keys = ['super-secret-key'];
@@ -30,6 +28,7 @@ app.use(passport.session());
 app.use(indexRoutes.routes());
 app.use(measRoutes.routes());
 app.use(authRoutes.routes());
+app.use(polarRoutes.routes());
 
 // server
 const server = app.listen(PORT, () => {

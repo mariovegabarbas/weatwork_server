@@ -30,7 +30,3 @@ passport.use(new LocalStrategy(options, (username, password, done) => {
   })
   .catch((err) => { return done(err); });
 }));
-
-/* https://flow.polar.com/oauth2/authorization?response_type=code&client_id=9cb3f0e9-6278-4c45-829c-5b480ada245d */
-/*client id:  9cb3f0e9-6278-4c45-829c-5b480ada245d  */ 
-/*secret:     46cc92ea-50ba-4fa2-8500-4492315d9d14  */

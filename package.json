@@ -17,15 +17,19 @@
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
+    "btoa": "^1.2.1",
     "knex": "^0.13.0",
     "koa": "^2.3.0",
-    "koa-bodyparser": "^4.2.0",
-    "koa-passport": "^4.0.1",
+    "koa-bodyparser": "^4.2.1",
+    "koa-passport": "^4.1.0",
     "koa-redis": "^3.1.1",
+    "koa-request": "^1.0.0",
     "koa-router": "^7.2.1",
     "koa-session": "^5.5.1",
+    "node-fetch": "^2.1.2",
     "passport-local": "^1.0.0",
-    "pg": "^7.1.2",
-    "polar-sdk": "0.0.12"
+    "pg": "^7.4.3",
+    "polar-sdk": "0.0.12",
+    "querystring": "^0.2.0"
   }
 }

@@ -19,6 +19,10 @@ function addUser(user) {
   .returning('*');
 }
 
+function updatePolarInfo(accesstoken, userid){
+  
+}
+
 module.exports = {
   getSingleUser,
   addUser,
