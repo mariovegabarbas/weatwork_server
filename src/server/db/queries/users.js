@@ -29,8 +29,22 @@ function updatePolarInfo(id, at, ui){
   .returning('*');
 }
 
+function getUserId(id){
+  return knex('users')
+  .select('userid')
+  .where({ id: parseInt(id) });
+}
+
+function getAccessToken(id){
+  return knex('users')
+  .select('accesstoken')
+  .where({ id: parseInt(id) });
+}
+
 module.exports = {
   getSingleUser,
   addUser,
-  updatePolarInfo
+  updatePolarInfo,
+  getUserId,
+  getAccessToken
 };

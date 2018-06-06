@@ -26,7 +26,7 @@ router.get('/auth/polar', async(ctx) => {
           status: 'success',
           data: user
         };
-        console.log(user.id);
+        console.log(user[0].id);
         ctx.redirect(`https://flow.polar.com/oauth2/authorization?response_type=code&client_id=${polar_config.client_id}`);
       } else {
         ctx.status = 404;
@@ -100,16 +100,17 @@ router.get('/callback/polar', async(ctx) => {
           return res.json();
         }
       })
-      .then(json => {
+      .then(async function(json){
         if(json !== undefined){
           console.log(json);
           accessToken = json.access_token;
           userid = json.x_user_id;
         
           polar_config.fetchUserInfo(accessToken, userid);
-          queries.updatePolarInfo(helpers.getIdUser(ctx), accessToken, userid);
-          
+          const user = await queries.updatePolarInfo(helpers.getIdUser(ctx), accessToken, userid);
+
           return true;
+
         } else {
           return false;
         }
@@ -168,7 +169,6 @@ router.get('/callback/polar', async(ctx) => {
         });
       }
     });*/
-
   }else{
     ctx.redirect('/auth/login');
   }
@@ -176,6 +176,72 @@ router.get('/callback/polar', async(ctx) => {
 
 router.get('/polar/user/:id', async (ctx) => {
   polar_config.fetchUserInfo(accessToken, ctx.params.id);
+});
+
+router.get('/polar/listOf/:performance', async (ctx) =>{
+  if (helpers.ensureAuthenticated(ctx)) {
+    const id = helpers.getIdUser(ctx);
+    const performance = ctx.params.performance;
+    var re = /^(exercise|activity|physical-information)$/;
+
+    if(re.test(performance)){
+      const user = await queries.getSingleUser(id);
+      const accTkn = user[0].accesstoken;
+      const userid = user[0].userid;
+
+      console.log(accTkn);
+      console.log(userid);
+      const transactionId = await polar_config.createTransaction(accTkn, userid, performance);
+      const listOf = await polar_config.listOfPerformance(accTkn, userid, transactionId, performance);
+      console.log("listOf:  "+listOf);
+      const summaryExec = await polar_config.getExerciceSummary(accTkn, userid, transactionId, listOf);
+      const x = [222771426];
+      //const activities = await polar_config.getActivityInfo(accTkn, userid, transactionId, summaryExec);
+      const activities = await polar_config.getActivityInfo(accTkn, userid, transactionId, x);
+      ctx.status = 200;
+      ctx.body = {
+        status: 'OK',
+        data: activities
+      };
+    }else{
+      ctx.status = 404;
+      ctx.body = {
+        status: 'error',
+        message: 'That performance couldn\'t be done!.'
+      };
+    }
+  }else{
+    ctx.redirect('/auth/login');
+  }
+});
+
+router.get('/polar/notifications', async (ctx) => {
+
+  /** Credentials **/
+  var creds = btoa(`${polar_config.client_id}:${polar_config.client_secret}`);
+  
+  fetch('https://www.polaraccesslink.com/v3/notifications', {
+        method: 'GET',
+        headers: {
+          'Accept':'application/json',
+          'Authorization':`Basic ${creds}`
+        }
+  })
+  /** Inspect this section **/
+  .then(function(res) {
+      if (res.status !== 200){
+          console.log(res.status);
+          return null;
+      }else{
+          return res.json();
+      }
+    })
+    .then(function(body) {
+        console.log(body);
+      }).catch(function(err){
+        console.log(err);
+      });
+
 });
 
 router.get('/polar/user', async (ctx) =>{
