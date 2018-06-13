@@ -4,15 +4,95 @@ const client_id = '3b9cac8a-2ffd-4e4d-96bc-318c8be3a791';
 const client_secret = '846ccea5-0293-4d57-aaf4-c9d8b85b5ec0';
 
 function fetchUserInfo(accessToken, userid) {
-  fetch('https://www.polaraccesslink.com/v3/users/'+userid, {
+  return new Promise(function(resolve, reject){
+    fetch('https://www.polaraccesslink.com/v3/users/'+userid, {
         method: 'GET',
         headers: {
           'Accept':'application/json',
           'Authorization': `Bearer ${accessToken}`
         }
+      }).then(function(res) {
+        if (res.status !== 200){
+          console.log(res.status);
+          return false;
+        }else{
+          console.log("res.json()");
+          return res.json();
+        }
+      }).then(function(body) {
+        if(!body){
+          resolve("kein transaction fetching User Info.");
+        }else{
+          console.log(body);
+          resolve(body);
+        }
       })
-        .then(res => res.json())
-        .then(json => console.log(json));
+      .catch(err => {
+        reject(err);
+      });
+  });
+  
+}
+
+function registryUser(accessToken, userid, mockupId){
+  return new Promise(function(resolve, reject){
+    var inputBody = '<?xml version="1.0" encoding="utf-8" ?><register><member-id>userid_'+mockupId+'</member-id> </register>';
+    fetch('https://www.polaraccesslink.com/v3/users', {
+      method: 'POST',
+      headers: {
+        'Content-Type':'application/xml',
+        'Accept':'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      },
+      body: inputBody
+    }).then(function(res) {
+        if (res.status !== 200){
+          console.log(res.status);
+          return false;
+        }else{
+          console.log("res.json()");
+          return res.json();
+        }
+      }).then(function(body) {
+        if(!body){
+          resolve("kein transaction");
+        }else{
+          console.log(body);
+          resolve(body);
+        }
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+}
+
+function createTransaction(accessToken, userid, kindoftrans){
+  return new Promise(function(resolve, reject){
+    fetch('https://www.polaraccesslink.com/v3/users/'+userid+'/'+kindoftrans+'-transactions', {
+      method: 'POST',
+      headers: {
+        'Accept':'application/json',
+        'Authorization': `Bearer ${accessToken}`
+      }
+    }).then(function(res) {
+        if (res.status !== 201){
+          return false;
+        }else{
+          return res.json();
+        }
+      }).then(function(body) {
+        if(!body){
+          resolve("kein transaction");
+        }else{
+          console.log(body);
+          resolve(body["transaction-id"]);
+        }
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
 }
 
 function createTransaction(accessToken, userid, kindoftrans){
@@ -47,9 +127,12 @@ function getActivityInfo(accessToken, userid, transaction, activitiesId){
   return new Promise(function(resolve, reject){
     var responses = [];
     var reqCompleted = 0;
+    var summaryExe = [];
 
     for(i in activitiesId){
-      fetch('https://www.polaraccesslink.com/v3/users/'+userid+'/activity-transactions/'+transaction+'/activities/'+activitiesId[i]+'/zone-samples', {
+      const idact = activitiesId[i][0];
+      const date = activitiesId[i][2];
+      fetch('https://www.polaraccesslink.com/v3/users/'+userid+'/activity-transactions/'+transaction+'/activities/'+activitiesId[i][0]+'/zone-samples', {
         method: 'GET',
         headers: {
           'Accept':'application/json',
@@ -69,22 +152,64 @@ function getActivityInfo(accessToken, userid, transaction, activitiesId){
             }else{
               responses.push(body);
               reqCompleted++;
-              console.log(reqCompleted);
+              
+              var sleepTime = 0;
+              var tmp = [];
+              var s, act; 
+
+              var regStrH = /[0-9]{1,2}H/;
+              var regStrM = /[0-9]{1,2}M/;
+              var regStrS = /[0-9]{1,2}S/;
+
+              for(s in body['samples']){
+                for(act in body['samples'][s]["activity-zones"]){
+                  var aux = body['samples'][s]["activity-zones"][act];
+                  /*if(aux["index"] == 0){
+                    console.log("En fecha ["+summaryExec[i][2]+"] y zona "+aux["index"]+", con una duración de "+aux["inzone"]);
+                    console.log(sleepTime);
+                  }*/
+                  switch(parseInt(aux["index"])){
+                    case 0: {
+                      if(aux["inzone"].match(regStrH) != null){
+                        sleepTime = sleepTime + parseInt(aux["inzone"].match(regStrH)[0].split("H")[0])*3600;
+                        //console.log(aux["inzone"].match(regStrH)[0].split("H")[0]);
+                      }
+                      if(aux["inzone"].match(regStrM) != null){
+                        sleepTime = sleepTime + parseInt(aux["inzone"].match(regStrM)[0].split("M")[0])*60;
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                      if(aux["inzone"].match(regStrS) != null){
+                        sleepTime = sleepTime + parseInt(aux["inzone"].match(regStrS)[0].split("S")[0]);
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                    }
+                      break;
+                    default:
+                      break;
+                  }
+                }
+              }
+              tmp.push(idact);
+              tmp.push(date);
+              tmp.push(sleepTime);
+              //tmp.push(responses[i]['samples']);
+                  
+              summaryExe.push(tmp);
+              sleepTime = 0;
+              //summaryExe.push(responses[i]["samples"]);
+              //console.log(responses[i]["samples"]);
+              
+
             }
 
-            console.log(reqCompleted);
             if(reqCompleted == activitiesId.length){
-              var summaryExe = [];
-              for(i in responses){
-                /*var tmp = [];
-                tmp.push(responses[i]['transaction-id']);
-                tmp.push(responses[i]['start-time']);
-                tmp.push(responses[i].id);*/
-
-                summaryExe.push(responses[i]);
-
-                resolve(summaryExe);
-              }
+              resolve(summaryExe.sort(function(a,b){
+                if(a[1]===b[1]){
+                  return 0;
+                }else{
+                  return(a[1] < b[1] ? -1 : 1);
+                }
+              }));             
             }
           }).catch(err => {
             reject(err);
@@ -93,18 +218,13 @@ function getActivityInfo(accessToken, userid, transaction, activitiesId){
   });
 }
 
-function getExerciceSummary(accessToken, userid, transaction, urls){
+/** Change the name of the function **/
+function getActivitySummary(accessToken, userid, transaction, urls){
   return new Promise(function(resolve, reject){
     var responses = [];
     var reqCompleted = 0;
 
-    console.log("info en getExerciceSummary::")
-    console.log(urls.length);
-    console.log(urls);
-    console.log(urls[1]);
-
     for(i in urls){
-      console.log(urls[i]);
       fetch(urls[i], {
         method: 'GET',
         headers: {
@@ -125,7 +245,7 @@ function getExerciceSummary(accessToken, userid, transaction, urls){
             }else{
               responses.push(body);
               reqCompleted++;
-              console.log(reqCompleted);
+              //console.log(reqCompleted);
             }
 
             console.log(reqCompleted);
@@ -133,14 +253,39 @@ function getExerciceSummary(accessToken, userid, transaction, urls){
               var summaryExe = [];
               for(i in responses){
                 var tmp = [];
-                tmp.push(responses[i]['transaction-id']);
-                tmp.push(responses[i]['start-time']);
+
+                //console.log("******* "+responses[i]);
+
                 tmp.push(responses[i].id);
+                tmp.push(responses[i].created);
+                tmp.push(responses[i].date);
 
-                summaryExe.push(responses[i].id);
-
-                resolve(summaryExe);
+                summaryExe.push(tmp);
               }
+
+              summaryExe.sort(function(a,b){
+                if(a[1]===b[1]){
+                  return 0;
+                }else{
+                  return(a[1] < b[1] ? -1 : 1);
+                }
+              }).sort(function(a,b){
+                if(a[2]===b[2]){
+                  return 0;
+                }else{
+                  return(a[2] < b[2] ? -1 : 1);
+                }
+              });
+
+              var i, j, len=summaryExe.length-1;
+              for(i=0, j=1; i < len; i++, j++){
+                if(summaryExe[i][2]===summaryExe[j][2]){
+                  summaryExe.splice(i,1);
+                  i--; j--; len=summaryExe.length-1;
+                }
+              }
+
+              resolve(summaryExe);
             }
           }).catch(err => {
             reject(err);
@@ -192,6 +337,7 @@ module.exports = {
 	listOfPerformance,
   fetchUserInfo,
   createTransaction,
-  getExerciceSummary,
-  getActivityInfo
+  getActivitySummary,
+  getActivityInfo,
+  registryUser
 };
