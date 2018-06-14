@@ -251,11 +251,14 @@ router.get('/polar/listOf/:performance', async (ctx) =>{
 
       const sleepInfo = await polar_config.getSleepInfo(accTkn, userid, transactionId, summaryExec);
 
-      
+
       
       for(a in sleepInfo){
         console.log("Total Sleep Time (in seconds) registered for activity "+sleepInfo[a][0]+" to "+sleepInfo[a][1]+": "+sleepInfo[a][2]);
       }
+
+      const insert = await polar_config.addActivityPolarData(sleepInfo, summaryExec, id);
+      console.log(insert);
 
       ctx.status = 200;
       ctx.body = {
@@ -272,6 +275,23 @@ router.get('/polar/listOf/:performance', async (ctx) =>{
   }else{
     ctx.redirect('/auth/login');
   }
+});
+
+router.get('/polar/mockupAdding', async(ctx) =>{
+  if (helpers.ensureAuthenticated(ctx)) {
+    const id = helpers.getIdUser(ctx);
+    
+    const a = b = [];
+
+    const insert = await polar_config.mockupAddActivityPolarData(a, b, id);
+
+
+      console.log(insert);
+  }else{
+    ctx.redirect('/auth/login');
+  }
+
+
 });
 
 router.get('/polar/notifications', async (ctx) => {

@@ -1,7 +1,49 @@
 const fetch = require('node-fetch');
 
+const queries = require('../db/queries/measures');
+
 const client_id = '3b9cac8a-2ffd-4e4d-96bc-318c8be3a791';
 const client_secret = '846ccea5-0293-4d57-aaf4-c9d8b85b5ec0';
+
+
+function addActivityPolarData(sleepData, activityData, id){
+  
+  var aux = [];
+  var tmp;
+  for(i in sleepData){
+    tmp = { tstamp: 'now()', type: 'Sleep Time', position: 'none', sensor: 'Polar Watch', value: ''+sleepData[i][2]+'', id_user: ''+id+'', real_tstamp: ''+sleepData[i][1]+'T00:00:00.000Z' };
+    aux.push(tmp);
+  }
+
+  try {
+    const meas = queries.addMeasure(aux);
+    if (meas.length) {
+      return meas.length;
+    } else {
+      return meas;
+    }
+  } catch (err) {
+    return err;
+  }
+}
+
+function mockupAddActivityPolarData(sleepData, activityData, id){
+  
+  var aux = [];
+  var tmp = { tstamp: '"now()"',type: 'HH',position: 'left hand',sensor: 'polar brlt',value: '120',id_user: '1',real_tstamp: 'now()' };
+
+  try {
+    const meas = queries.addMeasure(tmp);
+    if (meas.length) {
+      return meas.length;
+    } else {
+      return meas;
+    }
+  } catch (err) {
+    return err;
+  }
+}
+
 
 function fetchUserInfo(accessToken, userid) {
   return new Promise(function(resolve, reject){
@@ -356,5 +398,7 @@ module.exports = {
   createTransaction,
   getActivitySummary,
   getSleepInfo,
-  registryUser
+  registryUser,
+  addActivityPolarData,
+  mockupAddActivityPolarData
 };
