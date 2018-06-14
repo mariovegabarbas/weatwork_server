@@ -123,7 +123,7 @@ function createTransaction(accessToken, userid, kindoftrans){
   });
 }
 
-function getActivityInfo(accessToken, userid, transaction, activitiesId){
+function getSleepInfo(accessToken, userid, transaction, activitiesId){
   return new Promise(function(resolve, reject){
     var responses = [];
     var reqCompleted = 0;
@@ -254,15 +254,31 @@ function getActivitySummary(accessToken, userid, transaction, urls){
               for(i in responses){
                 var tmp = [];
 
-                //console.log("******* "+responses[i]);
+                /** Data structure of a Activity Summary
+                {
+                  "id": 1234,
+                  "polar-user": "https://www.polaraccesslink/v3/users/1",
+                  "transaction-id": 179879,
+                  "date": "2010-12-31",
+                  "created": "2016-04-27T20:11:33.000Z",
+                  "calories": 2329,
+                  "active-calories": 428,
+                  "duration": "PT2H44M",
+                  "active-steps": 250
+                }
+                **/
 
                 tmp.push(responses[i].id);
                 tmp.push(responses[i].created);
                 tmp.push(responses[i].date);
 
+                tmp.push(responses[i].calories);
+                tmp.push(responses[i]['active-steps']);
+
                 summaryExe.push(tmp);
               }
 
+              /** Sorting by time-stamp and finally, date **/
               summaryExe.sort(function(a,b){
                 if(a[1]===b[1]){
                   return 0;
@@ -277,6 +293,7 @@ function getActivitySummary(accessToken, userid, transaction, urls){
                 }
               });
 
+              /** Deleting redundant data **/
               var i, j, len=summaryExe.length-1;
               for(i=0, j=1; i < len; i++, j++){
                 if(summaryExe[i][2]===summaryExe[j][2]){
@@ -338,6 +355,6 @@ module.exports = {
   fetchUserInfo,
   createTransaction,
   getActivitySummary,
-  getActivityInfo,
+  getSleepInfo,
   registryUser
 };

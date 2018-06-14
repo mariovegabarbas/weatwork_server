@@ -246,61 +246,21 @@ router.get('/polar/listOf/:performance', async (ctx) =>{
       const transactionId = await polar_config.createTransaction(accTkn, userid, performance);
       console.log(transactionId);
       const listOf = await polar_config.listOfPerformance(accTkn, userid, transactionId, performance);
-      //console.log("listOf:  "+listOf);
       const summaryExec = await polar_config.getActivitySummary(accTkn, userid, transactionId, listOf);
       //const summaryExec = [ [ 222380079, '2018-06-04T19:45:52.000', '2018-03-25' ], [ 222380084, '2018-06-04T19:45:54.000', '2018-03-27' ], [ 222380087, '2018-06-04T19:45:55.000', '2018-03-28' ], [ 222380089, '2018-06-04T19:45:55.000', '2018-03-29' ], [ 222380094, '2018-06-04T19:45:56.000', '2018-03-30' ], [ 222380097, '2018-06-04T19:45:56.000', '2018-04-01' ], [ 222380099, '2018-06-04T19:45:57.000', '2018-04-03' ], [ 222771420, '2018-06-06T13:48:09.000', '2018-06-04' ], [ 222771426, '2018-06-06T13:48:12.000', '2018-06-05' ], [ 223054855, '2018-06-07T19:29:46.000', '2018-06-06' ], [ 223054854, '2018-06-07T19:29:46.000', '2018-06-07' ], [ 223219727, '2018-06-08T14:56:21.000', '2018-06-08' ] ];
 
-      const activities = await polar_config.getActivityInfo(accTkn, userid, transactionId, summaryExec);
-      //const activities = await polar_config.getActivityInfo(accTkn, userid, transactionId, x);
+      const sleepInfo = await polar_config.getSleepInfo(accTkn, userid, transactionId, summaryExec);
 
-      /*var sleepTime = 0;
-      var regStrH = /[0-9]{1,2}H/;
-      var regStrM = /[0-9]{1,2}M/;
-      var regStrS = /[0-9]{1,2}S/;
-
-      console.log(summaryExec);
-      for(i in activities){
-        for(j in activities[i][2]){
-          for(m in activities[i][2][j]["activity-zones"]){
-            var aux = activities[i][2][j]["activity-zones"][m];
-            if(aux["index"] == 0){
-              console.log("En fecha ["+summaryExec[i][2]+"] y zona "+aux["index"]+", con una duración de "+aux["inzone"]);
-              console.log(sleepTime);
-            }
-            switch(parseInt(aux["index"])){
-              case 0: {
-                if(aux["inzone"].match(regStrH) != null){
-                  sleepTime = sleepTime + parseInt(aux["inzone"].match(regStrH)[0].split("H")[0])*3600;
-                  //console.log(aux["inzone"].match(regStrH)[0].split("H")[0]);
-                }
-                if(aux["inzone"].match(regStrM) != null){
-                  sleepTime = sleepTime + parseInt(aux["inzone"].match(regStrM)[0].split("M")[0])*60;
-                  //console.log(aux["inzone"].match(regStrH));
-                }
-                if(aux["inzone"].match(regStrS) != null){
-                  sleepTime = sleepTime + parseInt(aux["inzone"].match(regStrS)[0].split("S")[0]);
-                  //console.log(aux["inzone"].match(regStrH));
-                }
-              }
-                break;
-              default:
-                break;
-            }
-          }
-        }
-        console.log(summaryExec[i][2]);
-        console.log("Total Sleep time (in seconds): "+sleepTime);
-        sleepTime = 0;
-      }*/
-
-      for(a in activities){
-        console.log("Total Sleep Time (in seconds) registered for activity "+activities[a][0]+" to "+activities[a][1]+": "+activities[a][2]);
+      
+      
+      for(a in sleepInfo){
+        console.log("Total Sleep Time (in seconds) registered for activity "+sleepInfo[a][0]+" to "+sleepInfo[a][1]+": "+sleepInfo[a][2]);
       }
 
       ctx.status = 200;
       ctx.body = {
         status: 'OK',
-        data: activities
+        data: summaryExec
       };
     }else{
       ctx.status = 404;
