@@ -2,6 +2,7 @@ const Koa = require('koa');
 const bodyParser = require('koa-bodyparser');
 const session = require('koa-session');
 const passport = require('koa-passport');
+const views = require('koa-views');
 
 const indexRoutes = require('./routes/index');
 const measRoutes = require('./routes/measurements');
@@ -24,11 +25,19 @@ require('./auth');
 app.use(passport.initialize());
 app.use(passport.session());
 
+// views
+app.use(views(__dirname + '/views', {
+	map: {
+		html: 'ejs'
+	}
+}));
+
 // routes
 app.use(indexRoutes.routes());
 app.use(measRoutes.routes());
 app.use(authRoutes.routes());
 app.use(polarRoutes.routes());
+
 
 // server
 const server = app.listen(PORT, () => {

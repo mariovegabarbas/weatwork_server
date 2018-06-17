@@ -26,7 +26,8 @@ router.get('/auth/polar', async(ctx) => {
           status: 'success',
           data: user
         };
-        console.log(user[0].id);
+        console.log("In /auth/polar:User Id: "+user[0].id);
+        console.log("In /auth/polar:From: "+ctx.request.url);
         ctx.redirect(`https://flow.polar.com/oauth2/authorization?response_type=code&client_id=${polar_config.client_id}`);
       } else {
         ctx.status = 404;

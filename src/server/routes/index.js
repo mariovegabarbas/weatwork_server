@@ -6,6 +6,7 @@ router.get('/', async (ctx) => {
     status: 'success',
     message: 'hello, We@Work world!'
   };
+  //await ctx.render('index.html', {title: 'Mario es la leche'});
 })
 
 module.exports = router;

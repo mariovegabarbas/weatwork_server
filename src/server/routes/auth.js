@@ -73,8 +73,9 @@ router.get('/auth/logout', async (ctx) => {
 
 router.get('/auth/status', async (ctx) => {
   if (helpers.ensureAuthenticated(ctx)) {
-    ctx.type = 'html';
-    ctx.body = fs.createReadStream('./src/server/views/status.html');
+    await ctx.render('status.html');
+    //ctx.type = 'html';
+    //ctx.body = fs.createReadStream('./src/server/views/status.html');
   } else {
     ctx.redirect('/auth/login');
   }
