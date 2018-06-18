@@ -40,6 +40,7 @@ router.get('/auth/polar', async(ctx) => {
       console.log(err)
     }
   }else{
+    ctx.session.from = '/auth/polar';
     ctx.redirect('/auth/login');
   }
 });
@@ -84,7 +85,7 @@ router.get('/callback/polar', async(ctx) => {
     
 
 /** Getting tokens, the user is registry in AccessLink **/
-    fetch('https://polarremote.com/v2/oauth2/token', {
+    await fetch('https://polarremote.com/v2/oauth2/token', {
       headers: {
         'Content-Length': contentLength,
         'Content-Type': 'application/x-www-form-urlencoded',
@@ -103,12 +104,12 @@ router.get('/callback/polar', async(ctx) => {
       })
       .then(async function(json){
         if(json !== undefined){
-          console.log(json);
+          //console.log(json);
           accessToken = json.access_token;
           userid = json.x_user_id;
         
           const userInfo = await polar_config.fetchUserInfo(accessToken, userid);
-          console.log(userInfo);
+          //console.log(userInfo);
           const user = await queries.updatePolarInfo(helpers.getIdUser(ctx), accessToken, userid);
 
           return true;
@@ -171,7 +172,11 @@ router.get('/callback/polar', async(ctx) => {
         });
       }
     });*/
+
+    ctx.redirect('/');
+
   }else{
+    ctx.session.from = '/auth/polar';
     ctx.redirect('/auth/login');
   }
 });

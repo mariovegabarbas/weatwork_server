@@ -17,8 +17,25 @@ function addMeasure(measure) {
   .returning('*');
 }
 
+function getSinglePolarInfo(id, date) {
+  return knex('measurements')
+  .select('type', 'value', 'real_tstamp')
+  .whereIn('type', ['Sleep Time', 'Calories', 'Active-steps'])
+  .andWhere('real_tstamp', '>', date)
+  .andWhere({ id_user: parseInt(id) });
+}
+
+function getAllPolarInfo(id) {
+  return knex('measurements')
+  .select('type', 'value', 'real_tstamp')
+  .whereIn('type', ['Sleep Time', 'Calories', 'Active-steps'])
+  .andWhere({ id_user: parseInt(id) });
+}
+
 module.exports = {
 	getAllMeasures,
 	getSingleMeasure,
-	addMeasure
+	addMeasure,
+  getSinglePolarInfo,
+  getAllPolarInfo
 };

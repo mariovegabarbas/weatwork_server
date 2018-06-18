@@ -52,10 +52,15 @@ router.post('/auth/login', async (ctx) => {
       ctx.login(user);
       ctx.status = 200;
       ctx.body = { id_user: `${helpers.getIdUser(ctx)}`};
+      /*if(ctx.session.from) {
+        ctx.redirect(ctx.session.from);
+      }else{
+        ctx.redirect('/');
+      }*/
       //ctx.redirect('/auth/status');
       //ctx.redirect(`/api/v1/measure/${helpers.getIdUser(ctx)}`);
     } else {
-      ctx.status = 400;
+      ctx.status = 500;
       ctx.body = { status: 'error' };
     }
   })(ctx);
@@ -64,7 +69,8 @@ router.post('/auth/login', async (ctx) => {
 router.get('/auth/logout', async (ctx) => {
   if (helpers.ensureAuthenticated(ctx)) {
     ctx.logout();
-    ctx.redirect('/auth/login');
+    //ctx.redirect('/auth/login');
+    ctx.redirect(ctx.session.from);
   } else {
     ctx.body = { success: false };
     ctx.throw(401);

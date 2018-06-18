@@ -86,6 +86,7 @@ router.post(`${BASE_URL}`, async (ctx) => {
       };
     }
   } else {
+    ctx.status = 400;
     ctx.redirect('/auth/login');
   }
 });

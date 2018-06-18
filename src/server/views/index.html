@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Home</title>
+</head>
+<body>
+  <h1>Welcome <%= user_name %></h1>
+  <p>The server is runing at <%= port %></p>
+  <% if(login !== 'false') { %>
+  	<p><a href="/auth/login">Login in the system</a></p>
+  <% } else { %>
+  	<p><a href="/auth/logout">Log out, if you want...</a></p>
+  <% } %>
+</body>
+</html>

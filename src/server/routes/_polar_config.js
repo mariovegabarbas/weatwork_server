@@ -15,6 +15,14 @@ function addActivityPolarData(sleepData, activityData, id){
     aux.push(tmp);
   }
 
+  for(j in activityData){
+    tmp = { tstamp: 'now()', type: 'Calories', position: 'none', sensor: 'Polar Watch', value: ''+activityData[j][3]+'', id_user: ''+id+'', real_tstamp: ''+activityData[j][2]+'T00:00:00.000Z' };
+    aux.push(tmp);
+
+    tmp = { tstamp: 'now()', type: 'Active-steps', position: 'none', sensor: 'Polar Watch', value: ''+activityData[j][4]+'', id_user: ''+id+'', real_tstamp: ''+activityData[j][2]+'T00:00:00.000Z' };
+    aux.push(tmp);
+  }
+
   try {
     const meas = queries.addMeasure(aux);
     if (meas.length) {
@@ -58,7 +66,6 @@ function fetchUserInfo(accessToken, userid) {
           console.log(res.status);
           return false;
         }else{
-          console.log("res.json()");
           return res.json();
         }
       }).then(function(body) {
