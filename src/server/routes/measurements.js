@@ -91,6 +91,7 @@ router.post(`${BASE_URL}`, async (ctx) => {
   }
 });
 
+/* Review to delete this part */
 router.post(`${BASE_URL2}`, async (ctx) => {
   if (helpers.ensureAuthenticated(ctx)) {
     try {
