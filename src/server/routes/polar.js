@@ -261,9 +261,14 @@ router.get('/polar/listOf/:performance', async (ctx) =>{
       
       for(a in sleepInfo){
         console.log("Total Sleep Time (in seconds) registered for activity "+sleepInfo[a][0]+" to "+sleepInfo[a][1]+": "+sleepInfo[a][2]);
+        console.log("Total Sedentary Time (in seconds) registered for activity "+sleepInfo[a][0]+" to "+sleepInfo[a][1]+": "+sleepInfo[a][3]);
+
       }
 
+      console.log("TO HERE OK!");
+      console.log(summaryExec);
       const insert = await polar_config.addActivityPolarData(sleepInfo, summaryExec, id);
+      console.log("TO HERE OK!");
       console.log(insert);
 
       ctx.status = 200;

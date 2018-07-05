@@ -13,15 +13,30 @@ function addActivityPolarData(sleepData, activityData, id){
   for(i in sleepData){
     tmp = { tstamp: 'now()', type: 'Sleep Time', position: 'none', sensor: 'Polar Watch', value: ''+sleepData[i][2]+'', id_user: ''+id+'', real_tstamp: ''+sleepData[i][1]+'T00:00:00.000Z' };
     aux.push(tmp);
-  }
 
+    tmp = { tstamp: 'now()', type: 'Sedentary Time', position: 'none', sensor: 'Polar Watch', value: ''+sleepData[i][3]+'', id_user: ''+id+'', real_tstamp: ''+sleepData[i][1]+'T00:00:00.000Z' };
+    aux.push(tmp);
+
+    tmp = { tstamp: 'now()', type: 'Standing Time', position: 'none', sensor: 'Polar Watch', value: ''+sleepData[i][4]+'', id_user: ''+id+'', real_tstamp: ''+sleepData[i][1]+'T00:00:00.000Z' };
+    aux.push(tmp);
+
+    tmp = { tstamp: 'now()', type: 'Walking Time', position: 'none', sensor: 'Polar Watch', value: ''+sleepData[i][5]+'', id_user: ''+id+'', real_tstamp: ''+sleepData[i][1]+'T00:00:00.000Z' };
+    aux.push(tmp);
+
+    tmp = { tstamp: 'now()', type: 'Vigorous Time', position: 'none', sensor: 'Polar Watch', value: ''+sleepData[i][6]+'', id_user: ''+id+'', real_tstamp: ''+sleepData[i][1]+'T00:00:00.000Z' };
+    aux.push(tmp);
+  }
+  console.log("INSIDE AAPD OK!");
   for(j in activityData){
     tmp = { tstamp: 'now()', type: 'Calories', position: 'none', sensor: 'Polar Watch', value: ''+activityData[j][3]+'', id_user: ''+id+'', real_tstamp: ''+activityData[j][2]+'T00:00:00.000Z' };
     aux.push(tmp);
 
-    tmp = { tstamp: 'now()', type: 'Active-steps', position: 'none', sensor: 'Polar Watch', value: ''+activityData[j][4]+'', id_user: ''+id+'', real_tstamp: ''+activityData[j][2]+'T00:00:00.000Z' };
-    aux.push(tmp);
+    if(activityData[j][4] !== undefined){
+      tmp = { tstamp: 'now()', type: 'Active-steps', position: 'none', sensor: 'Polar Watch', value: ''+activityData[j][4]+'', id_user: ''+id+'', real_tstamp: ''+activityData[j][2]+'T00:00:00.000Z' };
+      aux.push(tmp);
+    }
   }
+  console.log("INSIDE AAPD2 OK!");
 
   try {
     const meas = queries.addMeasure(aux);
@@ -203,6 +218,11 @@ function getSleepInfo(accessToken, userid, transaction, activitiesId){
               reqCompleted++;
               
               var sleepTime = 0;
+              var sedentaryTime = 0;
+              var standingTime = 0;
+              var walkingTime = 0;
+              var vigorousTime = 0;
+
               var tmp = [];
               var s, act; 
 
@@ -233,6 +253,66 @@ function getSleepInfo(accessToken, userid, transaction, activitiesId){
                       }
                     }
                       break;
+                    case 1: {
+                      if(aux["inzone"].match(regStrH) != null){
+                        sedentaryTime = sedentaryTime + parseInt(aux["inzone"].match(regStrH)[0].split("H")[0])*3600;
+                        //console.log(aux["inzone"].match(regStrH)[0].split("H")[0]);
+                      }
+                      if(aux["inzone"].match(regStrM) != null){
+                        sedentaryTime = sedentaryTime + parseInt(aux["inzone"].match(regStrM)[0].split("M")[0])*60;
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                      if(aux["inzone"].match(regStrS) != null){
+                        sedentaryTime = sedentaryTime + parseInt(aux["inzone"].match(regStrS)[0].split("S")[0]);
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                    }
+                      break;
+                    case 2: {
+                      if(aux["inzone"].match(regStrH) != null){
+                        standingTime = standingTime + parseInt(aux["inzone"].match(regStrH)[0].split("H")[0])*3600;
+                        //console.log(aux["inzone"].match(regStrH)[0].split("H")[0]);
+                      }
+                      if(aux["inzone"].match(regStrM) != null){
+                        standingTime = standingTime + parseInt(aux["inzone"].match(regStrM)[0].split("M")[0])*60;
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                      if(aux["inzone"].match(regStrS) != null){
+                        standingTime = standingTime + parseInt(aux["inzone"].match(regStrS)[0].split("S")[0]);
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                    }
+                      break;
+                    case 3: {
+                      if(aux["inzone"].match(regStrH) != null){
+                        walkingTime = walkingTime + parseInt(aux["inzone"].match(regStrH)[0].split("H")[0])*3600;
+                        //console.log(aux["inzone"].match(regStrH)[0].split("H")[0]);
+                      }
+                      if(aux["inzone"].match(regStrM) != null){
+                        walkingTime = walkingTime + parseInt(aux["inzone"].match(regStrM)[0].split("M")[0])*60;
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                      if(aux["inzone"].match(regStrS) != null){
+                        walkingTime = walkingTime + parseInt(aux["inzone"].match(regStrS)[0].split("S")[0]);
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                    }
+                      break;
+                    case 4: {
+                      if(aux["inzone"].match(regStrH) != null){
+                        vigorousTime = vigorousTime + parseInt(aux["inzone"].match(regStrH)[0].split("H")[0])*3600;
+                        //console.log(aux["inzone"].match(regStrH)[0].split("H")[0]);
+                      }
+                      if(aux["inzone"].match(regStrM) != null){
+                        vigorousTime = vigorousTime + parseInt(aux["inzone"].match(regStrM)[0].split("M")[0])*60;
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                      if(aux["inzone"].match(regStrS) != null){
+                        vigorousTime = vigorousTime + parseInt(aux["inzone"].match(regStrS)[0].split("S")[0]);
+                        //console.log(aux["inzone"].match(regStrH));
+                      }
+                    }
+                      break;
                     default:
                       break;
                   }
@@ -241,10 +321,18 @@ function getSleepInfo(accessToken, userid, transaction, activitiesId){
               tmp.push(idact);
               tmp.push(date);
               tmp.push(sleepTime);
+              tmp.push(sedentaryTime);
+              tmp.push(standingTime);
+              tmp.push(walkingTime);
+              tmp.push(vigorousTime);
               //tmp.push(responses[i]['samples']);
                   
               summaryExe.push(tmp);
               sleepTime = 0;
+              sedentaryTime = 0;
+              standingTime = 0;
+              walkingTime = 0;
+              vigorousTime = 0;
               //summaryExe.push(responses[i]["samples"]);
               //console.log(responses[i]["samples"]);
               
@@ -322,8 +410,12 @@ function getActivitySummary(accessToken, userid, transaction, urls){
                 tmp.push(responses[i].date);
 
                 tmp.push(responses[i].calories);
-                tmp.push(responses[i]['active-steps']);
 
+                if(responses[i]['active-steps'] !== undefined){
+                  tmp.push(responses[i]['active-steps']);
+                  console.log("--------------->"+responses[i]['active-steps']);
+                }
+                
                 summaryExe.push(tmp);
               }
 

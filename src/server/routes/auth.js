@@ -60,7 +60,7 @@ router.post('/auth/login', async (ctx) => {
       //ctx.redirect('/auth/status');
       //ctx.redirect(`/api/v1/measure/${helpers.getIdUser(ctx)}`);
     } else {
-      ctx.status = 500;
+      ctx.status = 401;
       ctx.body = { status: 'error' };
     }
   })(ctx);
