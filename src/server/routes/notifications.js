@@ -14,6 +14,7 @@ const BASE_URL = `/api/v1/notification`;
 router.get(`${BASE_URL}/mph`, async (ctx) =>{
 	if (helpers.ensureAuthenticated(ctx)) {
     	try {
+      		//fetch('http://18.195.39.101:8080/api/send', {
       		fetch('http://localhost:1337/api/send', {
 				method: 'POST',
 			    headers: {

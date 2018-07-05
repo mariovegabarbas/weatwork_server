@@ -63,7 +63,6 @@ router.get(`${BASE_URL}/:id`, async (ctx) => {
 router.post(`${BASE_URL}`, async (ctx) => {
   if (helpers.ensureAuthenticated(ctx)) {
     try {
-      console.log(ctx.request.body);
       const meas = await queries.addMeasure(ctx.request.body);
       if (meas.length) {
         ctx.status = 201;
