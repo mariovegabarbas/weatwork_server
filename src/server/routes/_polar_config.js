@@ -67,6 +67,30 @@ function mockupAddActivityPolarData(sleepData, activityData, id){
   }
 }
 
+function fetchCommit(transactionId, userid){
+  return new Promise(function(resolve, reject){
+    fetch('https://www.polaraccesslink.com/v3/users/'+userid+'/activity-transactions/'+transactionId, {
+      method: 'PUT'
+    }).then(function(res) {
+        if (res.status !== 200){
+          console.log(res.status);
+          return false;
+        }else{
+          return res.json();
+        }
+      }).then(function(body) {
+        if(!body){
+          resolve("kein transaction fetching User Info.");
+        }else{
+          console.log(body);
+          resolve(body);
+        }
+      })
+      .catch(err => {
+        reject(err);
+      });
+  });
+  
 
 function fetchUserInfo(accessToken, userid) {
   return new Promise(function(resolve, reject){
@@ -499,5 +523,6 @@ module.exports = {
   getSleepInfo,
   registryUser,
   addActivityPolarData,
-  mockupAddActivityPolarData
+  mockupAddActivityPolarData,
+  fetchCommit
 };

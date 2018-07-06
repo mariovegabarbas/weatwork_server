@@ -276,6 +276,12 @@ router.get('/polar/listOf/:performance', async (ctx) =>{
         status: 'OK',
         data: summaryExec
       };
+
+      //COMMIT Transaction
+      /*console.log("Perfoming a commit for transaction "+transactionId);
+      const commit = await fetchCommit(transactionId, userid);
+      console.log("Commit done: "+commit);*/
+
     }else{
       ctx.status = 404;
       ctx.body = {
