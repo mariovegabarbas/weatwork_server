@@ -90,6 +90,7 @@ function fetchCommit(transactionId, userid){
         reject(err);
       });
   });
+}
   
 
 function fetchUserInfo(accessToken, userid) {
@@ -134,7 +135,7 @@ function registryUser(accessToken, userid, mockupId){
       },
       body: inputBody
     }).then(function(res) {
-        if (res.status !== 200){
+        if (res.status !== 201){
           console.log(res.status);
           return false;
         }else{

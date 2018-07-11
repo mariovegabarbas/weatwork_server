@@ -29,7 +29,7 @@ exports.seed = function(knex, Promise) {
           },
           {
             //id: 2, 
-            username: 'admn',
+            username: 'admin',
             password: hash2,
             admin: true
           },
