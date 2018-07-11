@@ -12,7 +12,7 @@ function addUser(user) {
   const hash = bcrypt.hashSync(user.password, salt);
   return knex('users')
   .insert({
-    id: user.id,
+    //id: user.id,
     username: user.username,
     password: hash,
   })

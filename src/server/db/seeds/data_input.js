@@ -9,19 +9,53 @@ exports.seed = function(knex, Promise) {
           const salt1 = bcrypt.genSaltSync();
           const hash1 = bcrypt.hashSync('vegabarbas', salt1);
           const salt2 = bcrypt.genSaltSync();
-          const hash2 = bcrypt.hashSync('comunist', salt2);
+          const hash2 = bcrypt.hashSync('admin', salt2);
+
+          const salt3 = bcrypt.genSaltSync();
+          const hash3 = bcrypt.hashSync('wework1', salt3);
+          const salt4 = bcrypt.genSaltSync();
+          const hash4 = bcrypt.hashSync('wework2', salt4);
+          const salt5 = bcrypt.genSaltSync();
+          const hash5 = bcrypt.hashSync('wework3', salt5);
+          const salt6 = bcrypt.genSaltSync();
+          const hash6 = bcrypt.hashSync('wework4', salt6);
+
           return knex('users').insert([
           {
-            id: 1, 
+            //id: 1, 
             username: 'mario',
             password: hash1,
             admin: false
           },
           {
-            id: 2, 
-            username: 'theRealParty',
+            //id: 2, 
+            username: 'admn',
             password: hash2,
             admin: true
+          },
+          {
+            //id: 2, 
+            username: 'wework1',
+            password: hash3,
+            admin: false
+          },
+          {
+            //id: 2, 
+            username: 'wework2',
+            password: hash4,
+            admin: false
+          },
+          {
+            //id: 2, 
+            username: 'wework3',
+            password: hash5,
+            admin: false
+          },
+          {
+            //id: 2, 
+            username: 'wework4',
+            password: hash6,
+            admin: false
           }
           ]);
         })
