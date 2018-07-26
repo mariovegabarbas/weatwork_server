@@ -104,12 +104,12 @@ router.get('/callback/polar', async(ctx) => {
       })
       .then(async function(json){
         if(json !== undefined){
-          //console.log(json);
+          console.log(json);
           accessToken = json.access_token;
           userid = json.x_user_id;
         
           const userInfo = await polar_config.fetchUserInfo(accessToken, userid);
-          //console.log(userInfo);
+          console.log(userInfo);
           const user = await queries.updatePolarInfo(helpers.getIdUser(ctx), accessToken, userid);
 
           return true;
@@ -189,6 +189,10 @@ router.get('/polar/register/:id', async (ctx) => {
   const user = await queries.getSingleUser(helpers.getIdUser(ctx));
   const accTkn = user[0].accesstoken;
   const userid = user[0].userid;
+  console.log(ctx.params.id);
+  console.log(helpers.getIdUser(ctx));
+  console.log(accTkn);
+  console.log(userid);
   const userRegistered = await polar_config.registryUser(accTkn, userid, ctx.params.id);
 
   console.log(userRegistered);

@@ -96,4 +96,14 @@ router.get('/auth/admin', async (ctx) => {
   }
 });
 
+router.put('/auth/regdevice', async(ctx) => {
+  if (helpers.ensureAuthenticated(ctx)) {
+    const user = await queries.updateDeviceId(helpers.getIdUser(ctx), ctx.request.body.device);
+    ctx.redirect('/');
+  } else {
+    ctx.body = { success: false };
+    ctx.throw(401);
+  }
+});
+
 module.exports = router;

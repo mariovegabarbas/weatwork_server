@@ -29,6 +29,15 @@ function updatePolarInfo(id, at, ui){
   .returning('*');
 }
 
+function updateDeviceId(id, device){
+  return knex('users')
+  .update({
+    deviceid: device
+  })
+  .where({ id: parseInt(id) })
+  .returning('*');
+}
+
 function getUserId(id){
   return knex('users')
   .select('userid')
@@ -46,5 +55,6 @@ module.exports = {
   addUser,
   updatePolarInfo,
   getUserId,
-  getAccessToken
+  getAccessToken,
+  updateDeviceId
 };

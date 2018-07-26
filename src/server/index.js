@@ -12,7 +12,7 @@ const notifyRoutes = require('./routes/notifications');
 const store = require('./session');
 
 const app = new Koa();
-const PORT = process.env.PORT || 1337;
+const PORT = process.env.PORT || 8080;
 
 // sessions
 app.keys = ['super-secret-key'];

@@ -5,6 +5,7 @@ exports.up = function(knex, Promise) {
     table.string('password').notNullable();
     table.string('accesstoken').unique();
     table.string('userid').unique();
+    table.string('deviceid').unique();
 
     /* To review and add to the sytem: This token has to be used 
     to sent notifications to the user mobile */
