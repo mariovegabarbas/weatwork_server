@@ -4,6 +4,7 @@ exports.up = function(knex, Promise) {
 		table.integer('id_response').notNullable();
 		table.integer('id_user').unsigned().notNullable();
 		table.foreign('id_user').references('users.id');
+		table.string('qtype').notNullable();
 		table.timestamp('response_tstamp').notNullable();
 		table.string('responses');
 	});
