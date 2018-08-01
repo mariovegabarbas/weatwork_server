@@ -1,6 +1,12 @@
 const bcrypt = require('bcryptjs');
 const knex = require('../connection');
 
+function getAllUsers(){
+  return knex('users')
+  .select('*')
+  .returning('*');
+}
+
 function getSingleUser(id) {
   return knex('users')
   .select('*')
@@ -56,5 +62,6 @@ module.exports = {
   updatePolarInfo,
   getUserId,
   getAccessToken,
-  updateDeviceId
+  updateDeviceId,
+  getAllUsers
 };
