@@ -7,21 +7,23 @@ const fs = require('fs');
 const helpers = require('./_helpers');
 
 const queries = require('../db/queries/measures');
+const uqueries = require('../db/queries/users');
 
 const router = new Router();
 const BASE_URL = `/api/v1/notification`;
 
-router.get(`${BASE_URL}/mph`, async (ctx) =>{
+router.get(`${BASE_URL}/pmh`, async (ctx) =>{
 	if (helpers.ensureAuthenticated(ctx)) {
     	try {
-      		//fetch('http://18.195.39.101:8080/api/send', {
-      		fetch('http://localhost:1337/api/send', {
+    		const user = await uqueries.getSingleUser(helpers.getIdUser(ctx));
+      		fetch('http://notifier.weatwork.eu:8080/api/send', {
+      		//fetch('http://localhost:8080/api/send', {
 				method: 'POST',
 			    headers: {
 			        'Content-Type': 'application/json'
 			    },
 			    //user must be the idDevice stored in the Users table
-			    body: JSON.stringify({body: "Hej Hej!", title: "title test", user: "nexus-pocket-waw"})
+			    body: JSON.stringify({body: "Hej Hej!", title: "title test", user: `${user[0].deviceid}`})
 			})
 			  /** Inspect this section **/
 			  .then(function(res) {
