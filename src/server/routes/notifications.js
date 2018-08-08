@@ -20,6 +20,7 @@ router.get(`${BASE_URL}/mph`, async (ctx) =>{
 			    headers: {
 			        'Content-Type': 'application/json'
 			    },
+			    //user must be the idDevice stored in the Users table
 			    body: JSON.stringify({body: "Hej Hej!", title: "title test", user: "nexus-pocket-waw"})
 			})
 			  /** Inspect this section **/
