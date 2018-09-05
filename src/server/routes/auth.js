@@ -36,6 +36,16 @@ router.post('/auth/register', async (ctx) => {
   }
 });
 
+router.get('/auth/loginNotify', async (ctx) => {
+  if (!helpers.ensureAuthenticated(ctx)) {
+    ctx.type = 'html';
+    ctx.body = fs.createReadStream('./src/server/views/loginNotify.html');
+  } else {
+    ctx.redirect('/auth/status');
+    //ctx.redirect('back');
+  }
+});
+
 router.get('/auth/login', async (ctx) => {
   if (!helpers.ensureAuthenticated(ctx)) {
     ctx.type = 'html';
@@ -46,12 +56,28 @@ router.get('/auth/login', async (ctx) => {
   }
 });
 
+router.post('/auth/loginNotify', async (ctx) => {
+  return passport.authenticate('local', (err, user, info, status) => {
+    if (user) {
+      ctx.login(user);
+      ctx.status = 200;
+      ctx.body = { id_user: `${helpers.getIdUser(ctx)}`};
+
+      ctx.redirect('/api/v1/notification/pmh');
+    } else {
+      ctx.status = 401;
+      ctx.body = { status: 'error' };
+    }
+  })(ctx);
+});
+
 router.post('/auth/login', async (ctx) => {
   return passport.authenticate('local', (err, user, info, status) => {
     if (user) {
       ctx.login(user);
       ctx.status = 200;
       ctx.body = { id_user: `${helpers.getIdUser(ctx)}`};
+
       /*if(ctx.session.from) {
         ctx.redirect(ctx.session.from);
       }else{

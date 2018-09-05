@@ -9,6 +9,7 @@ const measRoutes = require('./routes/measurements');
 const authRoutes = require('./routes/auth');
 const polarRoutes = require('./routes/polar');
 const notifyRoutes = require('./routes/notifications');
+const questionRoutes = require('./routes/questionnaires');
 const store = require('./session');
 
 const app = new Koa();
@@ -39,6 +40,7 @@ app.use(measRoutes.routes());
 app.use(authRoutes.routes());
 app.use(polarRoutes.routes());
 app.use(notifyRoutes.routes());
+app.use(questionRoutes.routes());
 
 
 // server

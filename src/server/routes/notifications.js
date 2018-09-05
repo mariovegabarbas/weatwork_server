@@ -14,6 +14,9 @@ const BASE_URL = `/api/v1/notification`;
 
 router.get(`${BASE_URL}/pmh`, async (ctx) =>{
 	if (helpers.ensureAuthenticated(ctx)) {
+		ctx.status = 200;
+      	ctx.body = { id_user: `${helpers.getIdUser(ctx)}`};
+    	
     	try {
     		const user = await uqueries.getSingleUser(helpers.getIdUser(ctx));
       		fetch('http://notifier.weatwork.eu:8080/api/send', {
@@ -23,7 +26,7 @@ router.get(`${BASE_URL}/pmh`, async (ctx) =>{
 			        'Content-Type': 'application/json'
 			    },
 			    //user must be the idDevice stored in the Users table
-			    body: JSON.stringify({body: "Hej Hej!", title: "title test", user: `${user[0].deviceid}`})
+			    body: JSON.stringify({body: "Yesterday you did very well. Good job!", title: "WeAtWork App", user: `${user[0].deviceid}`})
 			})
 			  /** Inspect this section **/
 			  .then(function(res) {
@@ -36,7 +39,9 @@ router.get(`${BASE_URL}/pmh`, async (ctx) =>{
 			      }
 			    });
 	    } catch (err) {
-	      console.log(err)
+	      console.log(err);
+	      ctx.status = 401;
+      	  ctx.body = { status: 'error' };
 	    }
 	} else {
 		ctx.redirect('/auth/login');
