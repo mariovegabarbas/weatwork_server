@@ -260,7 +260,13 @@ router.get('/polar/listOf/:performance', async (ctx) =>{
       //const summaryExec = [ [ 222380079, '2018-06-04T19:45:52.000', '2018-03-25' ], [ 222380084, '2018-06-04T19:45:54.000', '2018-03-27' ], [ 222380087, '2018-06-04T19:45:55.000', '2018-03-28' ], [ 222380089, '2018-06-04T19:45:55.000', '2018-03-29' ], [ 222380094, '2018-06-04T19:45:56.000', '2018-03-30' ], [ 222380097, '2018-06-04T19:45:56.000', '2018-04-01' ], [ 222380099, '2018-06-04T19:45:57.000', '2018-04-03' ], [ 222771420, '2018-06-06T13:48:09.000', '2018-06-04' ], [ 222771426, '2018-06-06T13:48:12.000', '2018-06-05' ], [ 223054855, '2018-06-07T19:29:46.000', '2018-06-06' ], [ 223054854, '2018-06-07T19:29:46.000', '2018-06-07' ], [ 223219727, '2018-06-08T14:56:21.000', '2018-06-08' ] ];
 
       const sleepInfo = await polar_config.getSleepInfo(accTkn, userid, transactionId, summaryExec);
-
+      console.log('commiting data');
+      try{
+        const commit = await polar_config.fetchCommit(accTkn, transactionId, userid);
+        console.log('data commited');
+      }catch(err){
+        console.log("Error during commiting: "+err);
+      }
 
       
       for(a in sleepInfo){
