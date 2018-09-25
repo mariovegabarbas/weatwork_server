@@ -198,6 +198,15 @@ router.get('/polar/register/:id', async (ctx) => {
   console.log(userRegistered);
 });
 
+router.get('/polar/delete', async (ctx) => {
+  const user = await queries.getSingleUser(helpers.getIdUser(ctx));
+  const accTkn = user[0].accesstoken;
+  const userid = user[0].userid;
+  const userDeleted = await polar_config.deleteUser(accTkn, userid);
+
+  console.log(userDeleted);
+});
+
 router.get('/testing', async (ctx) => {
   console.log("hola!");
   var auxTest = [{"activity-zones":[{"index":0,"inzone":"PT1H"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT0S"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"00:00:00.000"},{"activity-zones":[{"index":0,"inzone":"PT1H"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT0S"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"01:00:00.000"},{"activity-zones":[{"index":0,"inzone":"PT1H"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT0S"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"02:00:00.000"},{"activity-zones":[{"index":0,"inzone":"PT1H"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT0S"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"03:00:00.000"},{"activity-zones":[{"index":0,"inzone":"PT59M"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT1M"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"04:00:00.000"},{"activity-zones":[{"index":0,"inzone":"PT1H"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT0S"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"05:00:00.000"},{"activity-zones":[{"index":0,"inzone":"PT1H"},{"index":1,"inzone":"PT0S"},{"index":2,"inzone":"PT0S"},{"index":3,"inzone":"PT0S"},{"index":4,"inzone":"PT0S"},{"index":5,"inzone":"PT0S"}],"time":"06:00:00.000"}];

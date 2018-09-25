@@ -158,27 +158,24 @@ function registryUser(accessToken, userid, mockupId){
   });
 }
 
-function createTransaction(accessToken, userid, kindoftrans){
+function deleteUser(accessToken, userid){
   return new Promise(function(resolve, reject){
-    fetch('https://www.polaraccesslink.com/v3/users/'+userid+'/'+kindoftrans+'-transactions', {
-      method: 'POST',
+    fetch('https://www.polaraccesslink.com/v3/users/'+userid, {
+      method: 'DELETE',
       headers: {
-        'Accept':'application/json',
         'Authorization': `Bearer ${accessToken}`
-      }
+      },
     }).then(function(res) {
-        if (res.status !== 201){
+        if (res.status !== 204){
+          console.log(res.status);
           return false;
         }else{
+          console.log(res.status);
           return res.json();
         }
       }).then(function(body) {
-        if(!body){
-          resolve("kein transaction");
-        }else{
           console.log(body);
-          resolve(body["transaction-id"]);
-        }
+          resolve(body);
       })
       .catch(err => {
         reject(err);
@@ -196,13 +193,15 @@ function createTransaction(accessToken, userid, kindoftrans){
       }
     }).then(function(res) {
         if (res.status !== 201){
+          console.log("creating transaction: "+res)
           return false;
         }else{
           return res.json();
         }
       }).then(function(body) {
         if(!body){
-          resolve("kein transaction");
+
+          resolve("At createTransaction: kein transaction");
         }else{
           console.log(body);
           resolve(body["transaction-id"]);
@@ -527,5 +526,6 @@ module.exports = {
   registryUser,
   addActivityPolarData,
   mockupAddActivityPolarData,
-  fetchCommit
+  fetchCommit,
+  deleteUser
 };
