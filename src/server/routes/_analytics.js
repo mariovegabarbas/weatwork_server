@@ -53,10 +53,10 @@ function stressEnergyAnalytics(id) {
             comment = 'Some energy, take care today!';
           }
 
-          if(stressRes/6 <= 2.4 && energyRes/6 <= 2.6) comment = "Bored!";
-          if(stressRes/6 > 2.4 && energyRes/6 <= 2.6) comment = "Worn out!"; //Worn out
-          if(stressRes/6 <= 2.4 && energyRes/6 > 2.6) comment = "Committed without pressure!";
-          if(stressRes/6 > 2.4 && energyRes/6 > 2.6) comment = "Well done!";
+          if(stressRes/6 <= 2.4 && energyRes/6 <= 2.6) comment = "You look bored! Time for a coffee or even afterwork with your colleages?"; //Bored
+          if(stressRes/6 > 2.4 && energyRes/6 <= 2.6) comment = "You Look Exhausted!  Leave space in your schedule for rest and stop rushing"; //Worn out
+          if(stressRes/6 <= 2.4 && energyRes/6 > 2.6) comment = "You kook very energic, save your energy for possible stressfull days."; //Commited without pressure
+          if(stressRes/6 > 2.4 && energyRes/6 > 2.6) comment = "Well done! You look energic even under pressure. Leave space in your schedule for rest to keep your energy."; //Commited with pressure
 
           resolve("Evaluation of previous days: "+comment);
         }
