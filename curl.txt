@@ -1,8 +1,10 @@
-curl -X POST -c cookies2.txt -d 'username=mario&password=vegabarbas' http://localhost:1337/auth/login
+curl -X POST -c cookies2.txt -d 'username=wework1&password=wework1' http://localhost:8080/auth/login
 
-curl -X POST -b cookies2.txt -d "tstamp='now()'&type='HH'&position='left hand'&sensor='polar brlt'&value=120&id_user=1&real_tstamp='now()'" http://localhost:1337/api/v1/measure
+curl -X POST -b cookies2.txt -d "tstamp='now()'&type='HH'&position='left hand'&sensor='polar brlt'&value=120&id_user=1&real_tstamp='now()'" http://localhost:8080/api/v1/measure
 
-curl -X POST -b cookies2.txt -H 'Content-Type: application/json' -d '[{ "tstamp": "now()","type": "XX","position": "left hand","sensor": "polar brlt","value": 120,"id_user": 1,"real_tstamp": "now()" }]' http://localhost:1337/api/v1/measure
+curl -X POST -b cookies2.txt -H 'Content-Type: application/json' -d '[{ "tstamp": "now()","type": "XX","position": "left hand","sensor": "polar brlt","value": 120,"id_user": 1,"real_tstamp": "now()" }]' http://localhost:8080/api/v1/measure
+
+curl -X POST -b cookies2.txt -H 'Content-Type: application/json' -d '[{"id_response": "999","id_user":"1", "response_tstamp":"now()","responses":"hola","qtype":"MANOLO"}]' http://logger.weatwork.eu:8080/api/v1/questionnaire
 
 
-
+curl -X POST -b cookies2.txt -H 'Content-Type: application/json' -d '[{"id_response": "99999","id_user":"3", "response_tstamp":"now()","responses":"2#2#2#2#2#1#4#4#5#5#5#5"}]' http://localhost:8080/api/v1/questionnaire
