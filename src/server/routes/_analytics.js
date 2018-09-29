@@ -4,7 +4,8 @@ function stressEnergyAnalytics(id) {
   return new Promise((resolve, reject) => {
     queries.getLastStress(id)
     .then((question) => {
-        if(question[0]){
+
+        if(question[0] != undefined){
           stressRes = 0;
           energyRes = 0;
           aux = 0;
@@ -59,6 +60,8 @@ function stressEnergyAnalytics(id) {
           if(stressRes/6 > 2.4 && energyRes/6 > 2.6) comment = "Well done! You look energic even under pressure. Leave space in your schedule for rest to keep your energy."; //Commited with pressure
 
           resolve("Evaluation of previous days: "+comment);
+        }else{
+          resolve("Welcome to We@Work Envrionment!");
         }
     })
     .catch((err) => { reject(false); });
